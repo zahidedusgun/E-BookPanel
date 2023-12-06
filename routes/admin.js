@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 
 router.use("/book/create", (req, res) => {
-    res.render("/admin/book-create");
+    res.render("admin/book-create");
   });
   
 router.use("/books/:bookId", (req, res) => {

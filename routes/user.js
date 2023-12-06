@@ -1,65 +1,89 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const data = {
-    title: "Book List",
-    categories:["Book", "Magazine", "Article", "Blog Post"],
-    books:[
-        {
-            id:1,
-            name:"Book 1",
-            category:"Book",
-            description:"Book 1 Description",
-            image:"/static/images/book1.jpg",
-            homePage:true
-        },
-        {
-            id:2,
-            name:"Book 2",
-            category:"Book",
-            description:"Book 2 Description",
-            image:"/static/images/book2.jpg",
-            homePage:false
-        },
-        {
-            id:3,
-            name:"Book 3",
-            category:"Book",
-            description:"Book 3 Description",
-            image:"/static/images/book3.jpg",
-            homePage:true
-            
-        },
-        {
-            id:4,
-            name:"Book 4",
-            category:"Book",
-            description:"Book 4 Description",
-            image:"/static/images/book4.jpg",
-            homePage:true
-        },
-        {
-            id:5,
-            name:"Book 5",
-            category:"Book",
-            description:"Book 5 Description",
-            image:"/static/images/book5.jpg",
-            homePage:true
-        },
-    ]
-}
+const db = require("../data/db");
 
-router.use("/books/:bookId", (req, res) => {
-    res.render( "users/book-details");
-  });
-  
-router.use("/books", (req, res) => {
-    res.render( "users/books",data);
-  });
-  
-router.use("/", (req, res) => {
-    res.render( "users/index",data);
-  });
-  
+router.use("/books/category/:categoryid", async function (req, res) {
+  const categoryId = req.params.categoryid;
+  console.log(categoryId)
+
+  try {
+    const [books, ] = await db.execute("SELECT * FROM books WHERE categoryId = ?", [
+      categoryId,
+    ]);
+    const [categories, ] = await db.execute("SELECT * FROM category");
+    console.log(books[0].name)
+      return res.render("users/books", {
+        title: books[0].name,
+        books: books,
+        categories: categories,
+        selectedCategory: categoryId,
+      });
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ error: "page not found!" });
+    // res.render("partials/no-products")
+  }
+});
+
+router.use("/books/:bookid", async function (req, res) {
+  const bookId = req.params.bookid;
+  console.log(bookId)
+
+  try {
+    const [books] = await db.execute("SELECT * FROM books WHERE bookId = ?", [
+      bookId,
+    ]);
+    console.log(books[0].name)
+    if (books[0]) {
+      return res.render("users/book-details", {
+        name: books[0].name,
+        bookid: bookId,
+        description: books[0].description,
+        books: books[0],
+        selectedCategory: null,
+      });
+    }
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.use("/books", async function (req, res) {
+  try {
+    const [books] = await db.execute("SELECT * FROM books");
+    const [categories] = await db.execute("SELECT * FROM category");
+
+    res.render("users/books", {
+      title: "Books",
+      books: books,
+      categories: categories,
+      selectedCategory: null,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" }); // Send an error response
+  }
+});
+
+router.use("/", async function (req, res) {
+  try {
+    const [books] = await db.execute("SELECT * FROM books");
+    const [categories] = await db.execute("SELECT * FROM category");
+
+    res.render("users/index", {
+      title: "Books",
+      books: books,
+      categories: categories,
+      selectedCategory: null,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 module.exports = router;

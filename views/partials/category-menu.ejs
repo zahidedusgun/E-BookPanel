@@ -1,7 +1,10 @@
 <div class="list-group">
+
   <% categories.forEach(function(category){ %>
-  <a href="" class="a list-group-item list-group-item-action"
-    ><%= category %></a
+  <a href="/books/category/<%= category.categoryid %>" class="a list-group-item list-group-item-action
+    <%= selectedCategory == category.categoryid ? "active" : "" %>
+    ">
+    <%= category.category_name %></a
   >
   <% }) %>
 </div>

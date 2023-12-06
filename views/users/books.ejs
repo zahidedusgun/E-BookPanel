@@ -6,14 +6,17 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-3">
-<%-include("../partials/category-menu")  %>
+<%-include("../partials/category-menu", {categories, selectedCategory})  %>
             </div>
         <div class="col-md-9  mt-10">
-            <h5><%= title %></h5>
-            
+            <h5>List of All Books</h5>
+            <% if(books.length == 0) { %>
+                <%- include ("../partials/no-products",books)  %>
+            <% } %>
+
             <% books.forEach(books => {%>
-                <% if (books.homePage) { %>
-                    <%- include("../partials/blog-card",books) %>
+                <% if (books.home) { %>
+                    <%- include("../partials/book-card",books) %>
                 <% } %>
                
             <% }) %>
