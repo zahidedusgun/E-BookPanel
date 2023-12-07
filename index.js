@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: false }));//submit edilen verilen düzenli gelir.
 
 const path = require("path");
 const userRoutes = require("./routes/user");
