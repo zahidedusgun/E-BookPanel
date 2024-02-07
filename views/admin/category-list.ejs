@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head")  %>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .btn-emoji {
+            font-size: 1rem; 
+            transition: font-size 0.3s ease; 
+        }
+
+        .btn-emoji:hover {
+            font-size: 1.75rem; 
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/nav")  %>
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <% if (action != "undefined" && action=="edit") { %>
+                    <div class="alert alert-success">
+                        Category Deleted
+                    </div>
+                <% } %>
+                <% if (action != "undefined" && action=="create") { %>
+                    <div class="alert alert-success">
+                        Category Added
+                    </div>
+                <% } %>
+                <% if (action != "undefined" && action=="delete") { %>
+                    <div class="alert alert-success">
+                        Category Deleted
+                    </div>
+                <% } %>
+                <table class="table table-bordered table-striped text-center">
+                    <thead class="thead" style="background-color: #0C2C5B; color: #FFDC0D;">
+                        <tr>
+                            <th style="width: 50px;">Book ID</th>
+                            <th>Title</th>
+                            <th style="width: 130px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categories.forEach(category => { %>
+                            <tr>
+                                <td> <%= category.categoryid %> </td>
+                                <td>
+                                    <%= category.category_name %> 
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/categories/<%= category.categoryid %>">✏️</a>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/category/delete/<%= category.categoryid %>">🗑️</a></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js if needed -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add any additional scripts you may need -->
+</body>
+</html>

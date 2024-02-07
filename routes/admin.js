@@ -4,8 +4,8 @@ const path = require("path");
 
 const db = require("../data/db");
 
+//Create a book
 router.get("/book/create", async (req, res) => {
-  console.log("req.body");
   try {
     const [categories] = await db.execute("SELECT * FROM category");
     res.render("admin/book-create", {
@@ -18,6 +18,7 @@ router.get("/book/create", async (req, res) => {
   }
 });
 
+//Creating a book
 router.post("/book/create", async (req, res) => {
   const name = req.body.name;
   const description = req.body.description;
@@ -38,20 +39,7 @@ router.post("/book/create", async (req, res) => {
   }
 });
 
-router.get("/books", async (req, res) => {
-  try {
-    const [books] = await db.execute("SELECT * FROM books");
-    res.render("admin/book-list", {
-      title: "Book List",
-      books: books,
-      action: req.query.action,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
+//Selecting a book
 router.get("/books/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
   try {
@@ -60,7 +48,6 @@ router.get("/books/:bookId", async (req, res) => {
     ]);
     const [categories, ] = await db.execute("SELECT * FROM category");
     const book = books[0];
-    console.log(book);
     if (book) {
       return res.render("admin/book-edit",
         {
@@ -69,7 +56,6 @@ router.get("/books/:bookId", async (req, res) => {
           book: book,
           image: book.image,
           categories: categories,
-          console: console.log("burası",categories),
         });
     }
     
@@ -100,6 +86,7 @@ router.post("/books/:bookId", async (req, res) => {
   }
 });
 
+//Delete getting 
 router.get("/book/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
@@ -119,6 +106,7 @@ router.get("/book/delete/:bookId", async (req, res) => {
   }
 });
 
+//Delete posting
 router.post("/book/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
@@ -132,6 +120,131 @@ router.post("/book/delete/:bookId", async (req, res) => {
   }
 });
 
+//get posts
+router.get("/books", async (req, res) => {
+  try {
+    const [books] = await db.execute("SELECT * FROM books");
+    res.render("admin/book-list", {
+      title: "Book List",
+      books: books,
+      action: req.query.action,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Categories
+
+//get posts
+router.get("/categories", async (req, res) => {
+  console.log("Category");
+  try {
+    const [categories, ] = await db.execute("SELECT * FROM category");
+    console.log("Category",categories);
+    res.render("admin/category-list", {
+      title: "Category List",
+      categories: categories,
+      action: req.query.action,
+      categoryid: req.query.categoryid,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Create a category
+router.get("/category/create", async (req, res) => {
+  try {
+    res.render("admin/category-create", {
+      title: "Add Category",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Creating a category
+router.post("/category/create", async (req, res) => {
+  const name = req.body.name;
+  try {
+    await db.execute("INSERT INTO category (category_name) VALUES (?)", [name]);
+    res.redirect("admin/categories?action=created");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Editing a category
+router.get("/categories/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
+  try {
+    const [categories, ] = await db.execute("SELECT * FROM category WHERE categoryid = ?", [
+      categoryId,
+    ]);
+    const category = categories[0];
+    if (category) {
+      return res.render("admin/category-edit", {
+        title: "Edit Category",
+        category: category,
+      });
+    }
+    res.redirect("admin/categories");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Editing the category
+router.post("/categories/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
+  const name = req.body.name;
+  try {
+    await db.execute("UPDATE category SET category_name = ? WHERE categoryid = ?", [
+      name,
+      categoryId,
+    ]);
+    res.redirect("/admin/categories?action=updated");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Delete Category getting
+router.get("/category/delete/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
+  try {
+    const [categories, ] = await db.execute("SELECT * FROM category WHERE categoryid = ?", [
+      categoryId,
+    ]);
+    const category = categories[0];
+    res.render("admin/category-delete", {
+      title: "Delete Category",
+      category: category,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Delete Category posting
+router.post("/category/delete/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
+  try {
+    await db.execute("DELETE FROM category WHERE categoryid = ?", [categoryId]);
+    res.redirect("/admin/categories?action=deleted");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 module.exports = router;
 
 router;
