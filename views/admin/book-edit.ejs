@@ -16,28 +16,33 @@
                     <div class="row mb-3">
                         <label for="name" class="col-sm-2 col-form-label">Title of Book</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="name" name="name" >
+                            <input type="text" class="form-control" id="name" name="name" value="<%= book.name %>">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="description" class="col-sm-2 col-form-label">Description</label>
                         <div class="col-sm-8">
-                            <textarea name="description" class="form-control" rows="10"></textarea>
+                            <textarea name="description" class="form-control" rows="10"><%= book.description %>"</textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="image" class="col-sm-2 col-form-label">Image</label>
+                        <label for="image" class="col-sm-2 col-form-label" >Image</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="image" name="image">
+                            <input type="text" class="form-control" id="image" name="image" value="<%= book.image %>">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="category" class="col-sm-2 col-form-label">Category</label>
                         <div class="col-sm-8">
                             <select name="category" id="category" class="form-select">
-                                <option value="-1" selected>Select</option>
-                  
+                                <option value="-1" >Select</option>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.categoryid %>"><%= category.category_name %></option>
+                                <% }) %>
                             </select>
+                            <script>
+                                document.querySelector("#category").value = "<%= book.categoryid%>";
+                            </script>
                         </div>
                     </div>
                     <div class="row mb-3">
