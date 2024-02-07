@@ -31,7 +31,7 @@ router.post("/book/create", async (req, res) => {
       "INSERT INTO books (name, description, image, categoryid, home, accept) VALUES (?, ?, ?, ?, ?, ?)",
       [name, description, image, category, home, accept]
     );
-     res.redirect("/");
+     res.redirect("/admin/books?action=created");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -44,6 +44,7 @@ router.get("/books", async (req, res) => {
     res.render("admin/book-list", {
       title: "Book List",
       books: books,
+      action: req.query.action,
     });
   } catch (err) {
     console.log(err);
@@ -79,6 +80,7 @@ router.get("/books/:bookId", async (req, res) => {
   }
 });
 
+//Editing the book
 router.post("/books/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
   const name = req.body.name;
@@ -91,10 +93,42 @@ router.post("/books/:bookId", async (req, res) => {
       "UPDATE books SET name = ?, description = ?, image = ?, categoryid = ? WHERE bookId = ?",
       [name, description, image, category, bookId]
     );
-    res.redirect("/");
+    res.redirect("/admin/books?action=updated");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/book/delete/:bookId", async (req, res) => {
+  const bookId = req.params.bookId;
+
+  try {
+    const [books, ] = await db.execute("SELECT * FROM books WHERE bookId = ?", [
+      bookId,
+    ]);
+    const book = books[0];
+    res.render("admin/book-delete", {
+      title: "Delete Book",
+      book: book,
+    });
+  } 
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "GET DELETE ERROR" });
+  }
+});
+
+router.post("/book/delete/:bookId", async (req, res) => {
+  const bookId = req.params.bookId;
+
+  try {
+    await db.execute("DELETE FROM books WHERE bookId = ?", [bookId]);
+    res.redirect("/books?action=deleted");
+  } 
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "GET DELETE ERROR" });
   }
 });
 

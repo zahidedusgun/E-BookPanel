@@ -20,6 +20,21 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12 mt-3">
+                <% if (action != "undefined" && action=="edit") { %>
+                    <div class="alert alert-success">
+                        blog Güncelledi.
+                    </div>
+                <% } %>
+                <% if (action != "undefined" && action=="create") { %>
+                    <div class="alert alert-success">
+                        Blog Eklendi.
+                    </div>
+                <% } %>
+                <% if (action != "undefined" && action=="delete") { %>
+                    <div class="alert alert-success">
+                        Blog Silindi.
+                    </div>
+                <% } %>
                 <table class="table table-bordered table-striped text-center">
                     <thead class="thead" style="background-color: #0C2C5B; color: #FFDC0D;">
                         <tr>
@@ -41,7 +56,7 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.bookid %>">✏️</a>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.bookid %>">🗑️</a></td>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/book/delete/<%= book.bookid %>">🗑️</a></td>
                             </tr>
                         <% }) %>
                     </tbody>
