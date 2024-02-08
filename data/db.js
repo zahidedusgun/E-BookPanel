@@ -1,18 +1,23 @@
 const mysql = require("mysql2");
 const config = require("../config");
 
-let connection = mysql.createConnection(config.db);
+const Sequelize = require("sequelize");
+const { connect } = require("../routes/user");
 
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-
-  connection.query("SELECT * FROM books", function (err, result) {
-    result.forEach(function (book) {
-      console.log("db page:",book.name);
-    });
-  });
-  console.log("Connected!");
+const sequelize = new Sequelize(config.db.database, config.db.user, config.db.password, {
+  dialect: "mysql",
+  host: config.db.host,
 });
 
-module.exports = connection.promise();
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+}
+
+testConnection();
+
+module.exports = sequelize;

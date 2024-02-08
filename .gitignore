@@ -2,5 +2,4 @@
 node_modules/
 images/
 config.js
-eneme.js
-```
+secret.js
