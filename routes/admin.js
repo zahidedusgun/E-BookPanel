@@ -5,6 +5,9 @@ const fs = require("fs");
 
 const db = require("../data/db");
 const imageUpload = require("../helpers/image-upload");
+
+const Book = require("../models/book");
+const Category = require("../models/category");
 //Create a book
 router.get("/book/create", async (req, res) => {
   try {
@@ -28,14 +31,14 @@ router.post(
     const description = req.body.description;
     const image = req.file.filename;
     const category = req.body.category;
-    const home = req.body.home == "on" ? 1 : 0;
-    const accept = req.body.accept == "on" ? 1 : 0;
 
     try {
-      await db.execute(
-        "INSERT INTO books (name, description, image, categoryid, home, accept) VALUES (?, ?, ?, ?, ?, ?)",
-        [name, description, image, category, home, accept]
-      );
+      await Book.create({
+        name: name,
+        description: description,
+        image: image,
+        categoryId: category,
+      });
       res.redirect("/admin/books?action=created");
     } catch (err) {
       console.log(err);
@@ -190,7 +193,9 @@ router.get(
 router.post("/category/create", async (req, res) => {
   const name = req.body.name;
   try {
-    await db.execute("INSERT INTO category (category_name) VALUES (?)", [name]);
+    await Category.create({
+      categoryName: name,
+    });
     res.redirect("admin/categories?action=created");
   } catch (err) {
     console.log(err);
