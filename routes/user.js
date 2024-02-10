@@ -2,24 +2,29 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../data/db");
+const Book = require("../models/book");
+const Category = require("../models/category");
 
-router.use("/books/category/:categoryid", async function (req, res) {
-  const categoryId = req.params.categoryid;
-  console.log(categoryId)
-
+router.use("/books/category/:categoryId", async function (req, res) {
+  const categoryId = req.params.categoryId;
   try {
-    const [books, ] = await db.execute("SELECT * FROM books WHERE categoryId = ?", [
-      categoryId,
-    ]);
-    const [categories, ] = await db.execute("SELECT * FROM category");
-    console.log(books[0].name)
+    const books = await Book.findAll({
+      where: {
+        categoryid: categoryId,
+      },
+      raw: true,
+    });
+    const categories = await Category.findAll({ raw: true });
+    if (books.length > 0) {
       return res.render("users/books", {
         title: books[0].name,
         books: books,
         categories: categories,
         selectedCategory: categoryId,
       });
-    res.redirect("/");
+    }
+  else
+    res.render("partials/no-products");
   } catch (err) {
     console.log(err);
     res.status(404).json({ error: "page not found!" });
@@ -27,22 +32,15 @@ router.use("/books/category/:categoryid", async function (req, res) {
   }
 });
 
-router.use("/books/:bookid", async function (req, res) {
-  const bookId = req.params.bookid;
-  console.log(bookId)
+router.use("/books/:bookId", async function (req, res) {
+  const bookId = req.params.bookId;
+  console.log(bookId);
 
   try {
-    const [books] = await db.execute("SELECT * FROM books WHERE bookId = ?", [
-      bookId,
-    ]);
-    console.log(books[0].name)
-    if (books[0]) {
+    const book = await Book.findByPk(bookId);
+    if (book) {
       return res.render("users/book-details", {
-        name: books[0].name,
-        bookid: bookId,
-        description: books[0].description,
-        books: books[0],
-        selectedCategory: null,
+        book: book,
       });
     }
     res.redirect("/");
@@ -54,8 +52,8 @@ router.use("/books/:bookid", async function (req, res) {
 
 router.use("/books", async function (req, res) {
   try {
-    const [books] = await db.execute("SELECT * FROM books");
-    const [categories] = await db.execute("SELECT * FROM category");
+    const books = await Book.findAll({ raw: true });
+    const categories = await Category.findAll({ raw: true });
 
     res.render("users/books", {
       title: "Books",
@@ -71,9 +69,8 @@ router.use("/books", async function (req, res) {
 
 router.use("/", async function (req, res) {
   try {
-    const [books] = await db.execute("SELECT * FROM books");
-    const [categories] = await db.execute("SELECT * FROM category");
-
+    const books = await Book.findAll({ raw: true });
+    const categories = await Category.findAll({ raw: true });
     res.render("users/index", {
       title: "Books",
       books: books,

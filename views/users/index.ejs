@@ -12,10 +12,7 @@
             <h5><%= title %></h5>
             
             <% books.forEach(books => {%>
-                <% if (books.home) { %>
                     <%- include("../partials/book-card",books) %>
-                <% } %>
-               
             <% }) %>
         <!-- Pagination -->
         <%- include("../partials/pagination") %>

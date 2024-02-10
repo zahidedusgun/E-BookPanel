@@ -5,19 +5,21 @@ const Category = sequelize.define(
   "Category",
   {
     categoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
     },
     categoryName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 
 async function sync() {
-  await Category.sync();
+  await Category.sync({alter: true});
   console.log("Category table created");
 }
 

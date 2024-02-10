@@ -47,16 +47,16 @@
                     <tbody>
                         <% books.forEach(book => { %>
                             <tr>
-                                <td> <%= book.bookid %> </td>
+                                <td> <%= book.dataValues.bookId %> </td>
                                 <td>
-                                    <img src="/static/images/<%= book.image %>" class="img-fluid" alt="">
+                                    <img src="/static/images/<%= book.dataValues.image %>" class="img-fluid" alt="">
                                 </td>
                                 <td>
-                                    <%= book.name %> 
+                                    <%= book.dataValues.name %> 
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.bookid %>">✏️</a>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/book/delete/<%= book.bookid %>">🗑️</a></td>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.dataValues.bookId %>">✏️</a>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/book/delete/<%= book.dataValues.bookId %>">🗑️</a></td>
                             </tr>
                         <% }) %>
                     </tbody>

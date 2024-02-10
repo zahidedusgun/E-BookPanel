@@ -66,14 +66,14 @@
                 <select name="category" id="category" class="form-select">
                   <option value="-1">Select</option>
                   <% categories.forEach(category => { %>
-                  <option value="<%= category.categoryid %>">
-                    <%= category.category_name %>
+                  <option value="<%= category.dataValues.categoryId %>">
+                    <%= category.dataValues.categoryName %>
                   </option>
                   <% }) %>
                 </select>
                 <script>
                   document.querySelector("#category").value =
-                    "<%= book.categoryid%>";
+                    "<%= book.categoryId%>";
                 </script>
               </div>
             </div>

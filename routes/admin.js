@@ -8,10 +8,11 @@ const imageUpload = require("../helpers/image-upload");
 
 const Book = require("../models/book");
 const Category = require("../models/category");
+
 //Create a book
 router.get("/book/create", async (req, res) => {
   try {
-    const [categories] = await db.execute("SELECT * FROM category");
+    const categories = await Category.findAll();
     res.render("admin/book-create", {
       title: "Add Book",
       categories: categories,
@@ -51,22 +52,17 @@ router.post(
 router.get("/books/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
   try {
-    const [books] = await db.execute("SELECT * FROM books WHERE bookId = ?", [
-      bookId,
-    ]);
-    const [categories] = await db.execute("SELECT * FROM category");
-    const book = books[0];
+    const book = await Book.findByPk(bookId);
+    const categories = await Category.findAll();
+
     if (book) {
       return res.render("admin/book-edit", {
-        name: book.name,
-        description: book.description,
-        book: book,
-        image: book.image,
-        categories: categories,
+        book: book.dataValues,
+        categories: categories
       });
     }
 
-    res.redirect("admin/blogs");
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -141,7 +137,9 @@ router.post("/book/delete/:bookId", async (req, res) => {
 //get posts
 router.get("/books", async (req, res) => {
   try {
-    const [books] = await db.execute("SELECT * FROM books");
+    const books = await Book.findAll({
+      attributes: ["bookId", "name", "description", "image"],
+    });
     res.render("admin/book-list", {
       title: "Book List",
       books: books,
@@ -159,7 +157,7 @@ router.get("/books", async (req, res) => {
 router.get("/categories", async (req, res) => {
   console.log("Category");
   try {
-    const [categories] = await db.execute("SELECT * FROM category");
+    const categories = await Category.findAll();
     console.log("Category", categories);
     res.render("admin/category-list", {
       title: "Category List",
@@ -169,7 +167,7 @@ router.get("/categories", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Get Category Internal Server Error" });
   }
 });
 
@@ -184,22 +182,22 @@ router.get(
       });
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Category Create" });
     }
   }
 );
 
 //Creating a category
 router.post("/category/create", async (req, res) => {
-  const name = req.body.name;
+  const categoryName = req.body.categoryName;
   try {
     await Category.create({
-      categoryName: name,
+      categoryName: categoryName,
     });
     res.redirect("admin/categories?action=created");
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Category Create" });
   }
 });
 
@@ -207,18 +205,14 @@ router.post("/category/create", async (req, res) => {
 router.get("/categories/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
   try {
-    const [categories] = await db.execute(
-      "SELECT * FROM category WHERE categoryid = ?",
-      [categoryId]
-    );
-    const category = categories[0];
+    const category = await Category.findByPk(categoryId);
+
     if (category) {
       return res.render("admin/category-edit", {
-        title: "Edit Category",
-        category: category,
+        category: category.dataValues,
       });
     }
-    res.redirect("admin/categories");
+    console.log("Category içi", category);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });

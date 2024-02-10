@@ -46,13 +46,13 @@
                     <tbody>
                         <% categories.forEach(category => { %>
                             <tr>
-                                <td> <%= category.categoryid %> </td>
+                                <td> <%= category.dataValues.categoryId %> </td>
                                 <td>
-                                    <%= category.category_name %> 
+                                    <%= category.dataValues.categoryName %> 
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/categories/<%= category.categoryid %>">✏️</a>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/category/delete/<%= category.categoryid %>">🗑️</a></td>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/categories/<%= category.dataValues.categoryId %>">✏️</a>
+                                    <a class="btn btn-sm btn-emoji" href="/admin/category/delete/<%= category.dataValues.categoryId %>">🗑️</a></td>
                             </tr>
                         <% }) %>
                     </tbody>
