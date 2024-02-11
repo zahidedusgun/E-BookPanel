@@ -58,11 +58,9 @@ router.get("/books/:bookId", async (req, res) => {
     if (book) {
       return res.render("admin/book-edit", {
         book: book.dataValues,
-        categories: categories
+        categories: categories,
       });
     }
-
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -90,11 +88,16 @@ router.post(
     }
 
     try {
-      await db.execute(
-        "UPDATE books SET name = ?, description = ?, image = ?, categoryid = ? WHERE bookId = ?",
-        [name, description, image, category, bookId]
-      );
-      res.redirect("/admin/books?action=updated");
+      const book = await Book.findByPk(bookId);
+      if (book) {
+        book.name = name;
+        book.description = description;
+        book.image = image;
+        book.categoryId = category;
+        await book.save();
+        return res.redirect("/admin/books?action=updated");
+      }
+      res.redirect("/admin/books");
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -158,7 +161,6 @@ router.get("/categories", async (req, res) => {
   console.log("Category");
   try {
     const categories = await Category.findAll();
-    console.log("Category", categories);
     res.render("admin/category-list", {
       title: "Category List",
       categories: categories,
@@ -209,10 +211,11 @@ router.get("/categories/:categoryId", async (req, res) => {
 
     if (category) {
       return res.render("admin/category-edit", {
+        title: category.dataValues.categoryName,
         category: category.dataValues,
       });
     }
-    console.log("Category içi", category);
+    res.redirect("/admin/categories");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -222,13 +225,17 @@ router.get("/categories/:categoryId", async (req, res) => {
 //Editing the category
 router.post("/categories/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
-  const name = req.body.name;
+  const categoryName = req.body.categoryName;
   try {
-    await db.execute(
-      "UPDATE category SET category_name = ? WHERE categoryid = ?",
-      [name, categoryId]
+    await Category.update(
+      { categoryName: categoryName },
+      {
+        where: {
+          categoryId: categoryId,
+        },
+      }
     );
-    res.redirect("/admin/categories?action=updated");
+    return res.redirect("/admin/categories?action=updated");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
