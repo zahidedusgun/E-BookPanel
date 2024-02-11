@@ -24,6 +24,7 @@ router.get("/book/create", async (req, res) => {
 });
 
 //Creating a book
+// Creating a book
 router.post(
   "/book/create",
   imageUpload.upload.single("image"),
@@ -32,6 +33,15 @@ router.post(
     const description = req.body.description;
     const image = req.file.filename;
     const category = req.body.category;
+
+    // Check if the description contains the specified word
+    if (containsForbiddenWord(description)) {
+      return res.render("admin/book-create", {
+        title: "Add Book",
+        categories: await Category.findAll(),
+        error: "Description contains forbidden word",
+      });
+    }
 
     try {
       await Book.create({
@@ -43,10 +53,11 @@ router.post(
       res.redirect("/admin/books?action=created");
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: "burası" });
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
+
 
 //Selecting a book
 router.get("/books/:bookId", async (req, res) => {
@@ -110,14 +121,15 @@ router.get("/book/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
   try {
-    const [books] = await db.execute("SELECT * FROM books WHERE bookId = ?", [
-      bookId,
-    ]);
-    const book = books[0];
-    res.render("admin/book-delete", {
-      title: "Delete Book",
-      book: book,
-    });
+    const books = await Book.findByPk(bookId);
+
+    if (books) {
+      return res.render("admin/book-delete", {
+        title: "Delete Book",
+        book: books.dataValues,
+      });
+    }
+    res.redirect("/admin/books");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "GET DELETE ERROR" });
@@ -129,7 +141,11 @@ router.post("/book/delete/:bookId", async (req, res) => {
   const bookId = req.params.bookId;
 
   try {
-    await db.execute("DELETE FROM books WHERE bookId = ?", [bookId]);
+    const book = await Book.findByPk(bookId);
+    if (book) {
+      await book.destroy();
+      return res.redirect("/admin/books?action=deleted");
+    }
     res.redirect("/books?action=deleted");
   } catch (err) {
     console.log(err);
@@ -246,11 +262,7 @@ router.post("/categories/:categoryId", async (req, res) => {
 router.get("/category/delete/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
   try {
-    const [categories] = await db.execute(
-      "SELECT * FROM category WHERE categoryid = ?",
-      [categoryId]
-    );
-    const category = categories[0];
+    const category = await Category.findByPk(categoryId);
     res.render("admin/category-delete", {
       title: "Delete Category",
       category: category,
@@ -265,7 +277,11 @@ router.get("/category/delete/:categoryId", async (req, res) => {
 router.post("/category/delete/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
   try {
-    await db.execute("DELETE FROM category WHERE categoryid = ?", [categoryId]);
+    await Category.destroy({
+      where: {
+        categoryId: categoryId,
+      },
+    });
     res.redirect("/admin/categories?action=deleted");
   } catch (err) {
     console.log(err);
