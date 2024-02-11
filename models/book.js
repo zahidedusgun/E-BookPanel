@@ -26,11 +26,5 @@ const Book = sequelize.define('Book', {
     },
 });
 
-async function sync() {
-    await Book.sync({alter: true});
-    console.log("Book table created");
-}
-
-sync();
 
 module.exports = Book;

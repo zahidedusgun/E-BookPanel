@@ -18,11 +18,5 @@ const Category = sequelize.define(
   { timestamps: false }
 );
 
-async function sync() {
-  await Category.sync({alter: true});
-  console.log("Category table created");
-}
-
-sync();
 
 module.exports = Category;

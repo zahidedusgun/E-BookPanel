@@ -6,18 +6,21 @@ const fs = require("fs");
 const db = require("../data/db");
 const imageUpload = require("../helpers/image-upload");
 
+
 const Book = require("../models/book");
 const Category = require("../models/category");
+
 
 //Create a book
 router.get("/book/create", async (req, res) => {
   try {
+
     const categories = await Category.findAll();
     res.render("admin/book-create", {
       title: "Add Book",
       categories: categories,
     });
-  } catch (err) {
+  }catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -33,16 +36,7 @@ router.post(
     const description = req.body.description;
     const image = req.file.filename;
     const category = req.body.category;
-
-    // Check if the description contains the specified word
-    if (containsForbiddenWord(description)) {
-      return res.render("admin/book-create", {
-        title: "Add Book",
-        categories: await Category.findAll(),
-        error: "Description contains forbidden word",
-      });
-    }
-
+ 
     try {
       await Book.create({
         name: name,
@@ -57,7 +51,6 @@ router.post(
     }
   }
 );
-
 
 //Selecting a book
 router.get("/books/:bookId", async (req, res) => {

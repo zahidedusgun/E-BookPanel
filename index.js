@@ -17,4 +17,22 @@ app.use("/deneme", (req, res) => {
   res.send("viewsindex.html");
 });
 
+const sequelize = require("./data/db");
+const Category = require("./models/category");
+const Book = require("./models/book");
+const dummyData = require("./data/dummy-data");
+
+Category.hasMany(Book, {
+  foreignKey: "categoryId",
+  onDelete: "CASCADE",
+});
+Book.belongsTo(Category, {
+  foreignKey: "categoryId",
+});
+
+(async () => {
+  await sequelize.sync({ force: true });
+  await dummyData();
+})();
+
 app.listen(5000);
