@@ -27,6 +27,35 @@
                 </form>
             </div>
         </div>
+        <table class="table table-bordered table-striped text-center">
+            <thead class="thead" style="background-color: #0C2C5B; color: #FFDC0D;">
+                <tr>
+                    <th style="width: 50px;">Book ID</th>
+                    <th style="width: 150px;">Image</th>
+                    <th>Title</th>
+                    <th style="width: 130px;">Actions</th>
+                </tr>
+            </thead>
+            <p>
+                Book found belongs to this category:
+                <%= countBook %></p>
+            <tbody>
+                <% books.forEach(book => { %>
+                    <tr>
+                        <td> <%= book.dataValues.bookId %> </td>
+                        <td>
+                            <img src="/static/images/<%= book.dataValues.image %>" class="img-fluid" alt="">
+                        </td>
+                        <td>
+                            <%= book.dataValues.name %> 
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.dataValues.bookId %>">✏️</a>
+                            <a class="btn btn-sm btn-emoji" href="/admin/book/delete/<%= book.dataValues.bookId %>">🗑️</a></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </div>
        
 </body>

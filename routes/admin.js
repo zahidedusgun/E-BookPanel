@@ -1,26 +1,19 @@
 const express = require("express");
 const router = express.Router();
-
+const slugField = require("../helpers/slugfield");
 const imageUpload = require("../helpers/image-upload");
 
 const adminController = require("../controllers/admin");
 //Create a book
 router.get("/book/create", adminController.GetBookCreate);
 
-router.post(
-  "/book/create",
-  imageUpload.upload.single("image"),
-  adminController.PostBookCreate
-);
+router.post("/book/create",imageUpload.upload.single("image"),adminController.PostBookCreate);
 
 //Selecting a book
 router.get("/books/:bookId", adminController.GetBookEdit);
 
 //Editing the book
-router.post(
-  "/books/:bookId",
-  imageUpload.upload.single("image"),
-  adminController.PostBookEdit
+router.post("/books/:bookId",imageUpload.upload.single("image"),adminController.PostBookEdit
 );
 
 //Delete getting

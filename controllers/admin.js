@@ -1,7 +1,7 @@
 const Book = require("../models/book");
 const Category = require("../models/category");
 const fs = require("fs");
-
+const slugField = require("../helpers/slugfield");
 exports.GetBookDelete = async (req, res) => {
   const bookId = req.params.bookId;
 
@@ -88,6 +88,7 @@ exports.PostBookCreate = async (req, res) => {
   try {
     await Book.create({
       name: name,
+      url: slugField(name),
       description: description,
       image: image,
       categoryId: category,
@@ -178,11 +179,15 @@ exports.GetCategoryEdit = async (req, res) => {
   const categoryId = req.params.categoryId;
   try {
     const category = await Category.findByPk(categoryId);
+    const books = await category.getBooks();
+    const countBook = await category.countBooks();
 
     if (category) {
       return res.render("admin/category-edit", {
         title: category.dataValues.categoryName,
         category: category.dataValues,
+        books: books,
+        countBook: countBook,
       });
     }
     res.redirect("/admin/categories");
@@ -215,6 +220,12 @@ exports.GetAllBooks = async (req, res) => {
   try {
     const books = await Book.findAll({
       attributes: ["bookId", "name", "description", "image"],
+      include: [
+        {
+          model: Category,
+          attributes: ["categoryName"],
+        },
+      ],
     });
     res.render("admin/book-list", {
       title: "Book List",
@@ -228,17 +239,17 @@ exports.GetAllBooks = async (req, res) => {
 };
 
 exports.GetAllCategories = async (req, res) => {
-    console.log("Category");
-    try {
-      const categories = await Category.findAll();
-      res.render("admin/category-list", {
-        title: "Category List",
-        categories: categories,
-        action: req.query.action,
-        categoryid: req.query.categoryid,
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ error: "Get Category Internal Server Error" });
-    }
+  console.log("Category");
+  try {
+    const categories = await Category.findAll();
+    res.render("admin/category-list", {
+      title: "Category List",
+      categories: categories,
+      action: req.query.action,
+      categoryid: req.query.categoryid,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Get Category Internal Server Error" });
   }
+};

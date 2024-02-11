@@ -1,8 +1,8 @@
 <div class="list-group">
 
   <% categories.forEach(function(category){ %>
-  <a href="/books/category/<%= category.categoryId %>" class="a list-group-item list-group-item-action
-    <%= selectedCategory == category.categoryId ? "active" : "" %>
+  <a href="/books/category/<%= category.url %>" class="a list-group-item list-group-item-action
+    <%= selectedCategory == category.url ? "active" : "" %>
     ">
     <%= category.categoryName %></a
   >

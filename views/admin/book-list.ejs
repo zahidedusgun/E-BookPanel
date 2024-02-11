@@ -1,68 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <%- include("../partials/head")  %>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <head>
+    <%- include("../partials/head") %>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-        .btn-emoji {
-            font-size: 1rem; 
-            transition: font-size 0.3s ease; 
-        }
+      .btn-emoji {
+        font-size: 1rem;
+        transition: font-size 0.3s ease;
+      }
 
-        .btn-emoji:hover {
-            font-size: 1.75rem; 
-        }
+      .btn-emoji:hover {
+        font-size: 1.75rem;
+      }
     </style>
-</head>
-<body>
-    <%- include("../partials/nav")  %>
+  </head>
+  <body>
+    <%- include("../partials/nav") %>
 
     <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-12 mt-3">
-                <% if (action != "undefined" && action=="edit") { %>
-                    <div class="alert alert-success">
-                        blog Güncelledi.
-                    </div>
-                <% } %>
-                <% if (action != "undefined" && action=="create") { %>
-                    <div class="alert alert-success">
-                        Blog Eklendi.
-                    </div>
-                <% } %>
-                <% if (action != "undefined" && action=="delete") { %>
-                    <div class="alert alert-success">
-                        Blog Silindi.
-                    </div>
-                <% } %>
-                <table class="table table-bordered table-striped text-center">
-                    <thead class="thead" style="background-color: #0C2C5B; color: #FFDC0D;">
-                        <tr>
-                            <th style="width: 50px;">Book ID</th>
-                            <th style="width: 150px;">Image</th>
-                            <th>Title</th>
-                            <th style="width: 130px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% books.forEach(book => { %>
-                            <tr>
-                                <td> <%= book.dataValues.bookId %> </td>
-                                <td>
-                                    <img src="/static/images/<%= book.dataValues.image %>" class="img-fluid" alt="">
-                                </td>
-                                <td>
-                                    <%= book.dataValues.name %> 
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/books/<%= book.dataValues.bookId %>">✏️</a>
-                                    <a class="btn btn-sm btn-emoji" href="/admin/book/delete/<%= book.dataValues.bookId %>">🗑️</a></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
+      <div class="row">
+        <div class="col-md-12 mt-3">
+          <% if (action != "undefined" && action=="edit") { %>
+          <div class="alert alert-success">blog Güncelledi.</div>
+          <% } %> <% if (action != "undefined" && action=="create") { %>
+          <div class="alert alert-success">Blog Eklendi.</div>
+          <% } %> <% if (action != "undefined" && action=="delete") { %>
+          <div class="alert alert-success">Blog Silindi.</div>
+          <% } %>
+          <table class="table table-bordered table-striped text-center">
+            <thead
+              class="thead"
+              style="background-color: #0c2c5b; color: #ffdc0d"
+            >
+              <tr>
+                <th style="width: 50px">Book ID</th>
+                <th style="width: 150px">Image</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th style="width: 130px">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% books.forEach(book => { %>
+              <tr>
+                <td><%= book.dataValues.bookId %></td>
+                <td>
+                  <img
+                    src="/static/images/<%= book.dataValues.image %>"
+                    class="img-fluid"
+                    alt=""
+                  />
+                </td>
+                <td><%= book.dataValues.name %></td>
+                <td><%= book.Category.categoryName%></td>
+                <td>
+                  <a
+                    class="btn btn-sm btn-emoji"
+                    href="/admin/books/<%= book.dataValues.bookId %>"
+                    >✏️</a
+                  >
+                  <a
+                    class="btn btn-sm btn-emoji"
+                    href="/admin/book/delete/<%= book.dataValues.bookId %>"
+                    >🗑️</a
+                  >
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
 
     <!-- Add Bootstrap JS and Popper.js if needed -->
@@ -70,5 +81,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Add any additional scripts you may need -->
-</body>
+  </body>
 </html>

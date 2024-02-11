@@ -1,12 +1,14 @@
+const { where } = require("sequelize");
 const Book = require("../models/book");
 const Category = require("../models/category");
 
 exports.BooksByCategory = async function (req, res) {
-  const categoryId = req.params.categoryId;
+  const slug = req.params.slug;
   try {
     const books = await Book.findAll({
-      where: {
-        categoryid: categoryId,
+      include: {
+        model: Category,
+        where: { url: slug },
       },
       raw: true,
     });
@@ -16,7 +18,7 @@ exports.BooksByCategory = async function (req, res) {
         title: books[0].name,
         books: books,
         categories: categories,
-        selectedCategory: categoryId,
+        selectedCategory: slug,
       });
     } else res.render("partials/no-products");
   } catch (err) {
@@ -26,12 +28,15 @@ exports.BooksByCategory = async function (req, res) {
   }
 };
 
+
 exports.BookDetails = async function (req, res) {
-  const bookId = req.params.bookId;
-  console.log(bookId);
+  const slug = req.params.slug;
 
   try {
-    const book = await Book.findByPk(bookId);
+    const book = await Book.findOne ({
+      where: { url: slug },
+      raw: true,
+    });
     if (book) {
       return res.render("users/book-details", {
         book: book,
