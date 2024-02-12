@@ -28,12 +28,11 @@ exports.BooksByCategory = async function (req, res) {
   }
 };
 
-
 exports.BookDetails = async function (req, res) {
   const slug = req.params.slug;
 
   try {
-    const book = await Book.findOne ({
+    const book = await Book.findOne({
       where: { url: slug },
       raw: true,
     });
@@ -50,15 +49,34 @@ exports.BookDetails = async function (req, res) {
 };
 
 exports.Books = async function (req, res) {
+  const size = 4;
+  const { page = 0 } = req.query;
+  const slug = req.params.slug;
+
   try {
-    const books = await Book.findAll({ raw: true });
-    const categories = await Category.findAll({ raw: true });
+    const { rows, count } = await Book.findAndCountAll({
+      raw: true,
+      limit: size,
+      offset: page * size,
+      include: slug
+        ? {
+            model: Category,
+            where: { url: slug }
+          }
+        : null,
+    });
+    const categories = await Category.findAll({
+      raw: true,
+    });
 
     res.render("users/books", {
       title: "Books",
-      books: books,
+      books: rows,
+      totalItems: count,
+      totalPages: Math.ceil(count / size),
+      currentPage: page,
       categories: categories,
-      selectedCategory: null,
+      selectedCategory: slug,
     });
   } catch (err) {
     console.log(err);

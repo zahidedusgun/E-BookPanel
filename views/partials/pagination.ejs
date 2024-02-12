@@ -1,17 +1,22 @@
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+<% if (totalPages > 1) { %>
+  <nav class="mt-5">
+      <ul class="pagination justify-content-start">
+          <li class="page-item">
+              <a href="?page=0" class="page-link" style="background-color: #132C65; color: yellow;">İlk Sayfa</a>
+          </li>
+
+          <% for (let i = 0; i < totalPages; i++) { %>
+              <li class="page-item">
+                  <a href="?page=<%= i %>" class="page-link <%= (i == currentPage) ? "active" : "" %>" style="<%= (i == currentPage) ? "background-color: #132C65; color: yellow;" : "color: black;" %>">
+                      <%= i + 1 %>
+                  </a>
+              </li>
+          <% } %>
+
+          <li class="page-item">
+              <a href="?page=<%= totalPages - 1 %> " class="page-link" style="background-color: #132C65; color: yellow;">Son Sayfa</a>
+          </li>
+
+      </ul>
+  </nav>
+<% } %>

@@ -1,6 +1,7 @@
 const Category = require("../models/category");
 const Book = require("../models/book");
 const slugifyField = require('../helpers/slugfield');
+const { name } = require("ejs");
 
 async function populate() {
   const count = await Category.count();
@@ -52,6 +53,149 @@ async function populate() {
         categoryId: 4,
       },
     ]);
+
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+    
+    await Book.bulkCreate([
+      {
+        name: "The Shining",
+        url: slugifyField("The Shining"),
+        description: "A book about shining",
+        image: "shining.jpg",
+        categoryId: 5,
+      },
+    ]);
+
+        
   }
 }
 

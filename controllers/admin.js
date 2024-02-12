@@ -2,6 +2,7 @@ const Book = require("../models/book");
 const Category = require("../models/category");
 const fs = require("fs");
 const slugField = require("../helpers/slugfield");
+
 exports.GetBookDelete = async (req, res) => {
   const bookId = req.params.bookId;
 

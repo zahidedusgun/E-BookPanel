@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const slugField = require("../helpers/slugfield");
 const imageUpload = require("../helpers/image-upload");
 
 const adminController = require("../controllers/admin");

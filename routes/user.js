@@ -3,7 +3,7 @@ const router = express.Router();
 
 const userController = require("../controllers/user");
 
-router.use("/books/category/:slug", userController.BooksByCategory);
+router.use("/books/category/:slug", userController.Books);
 
 router.use("/books/:slug", userController.BookDetails);
 

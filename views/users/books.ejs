@@ -13,13 +13,12 @@
             <% if(books.length == 0) { %>
                 <%- include ("../partials/no-products",books)  %>
             <% } %>
-
-            <% books.forEach(books => {%>
-           
-                    <%- include("../partials/book-card",books) %>
-           
-               
+            
+            <% books.forEach(book => { %>
+                <%- include("../partials/book-card", book)  %> 
             <% }) %>
+
+            <%- include("../partials/pagination")  %>           
         </div>
     </div>
 </body>
