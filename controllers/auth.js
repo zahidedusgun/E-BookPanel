@@ -70,7 +70,8 @@ exports.PostLogin = async function (req, res) {
 const match = await bcrypt.compare(password, user.password);
 
     if(match){
-      req.session.isAuth = 1;
+      req.session.isAuth = true;
+      req.session.username = user.username;
       return res.redirect("/");
     }
 
@@ -83,8 +84,13 @@ const match = await bcrypt.compare(password, user.password);
 };
 
 exports.GetLogout = async function (req, res) {
-  await req.session.destroy();
-  return res.render("auth/login", {
-    title: "Login",
-  });
+  try{
+    await req.session.destroy();
+    return res.render("auth/login", {
+      title: "Login",
+    });
+  }
+  catch(err){
+    console.error(err);
+  }
 };

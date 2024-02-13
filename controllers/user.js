@@ -76,7 +76,7 @@ exports.Books = async function (req, res) {
       totalPages: Math.ceil(count / size),
       currentPage: page,
       categories: categories,
-      selectedCategory: slug,
+      selectedCategory: slug
     });
   } catch (err) {
     console.log(err);
@@ -93,8 +93,7 @@ exports.Home = async function (req, res) {
       title: "Books",
       books: books,
       categories: categories,
-      selectedCategory: null,
-      isAuth: req.session.isAuth,
+      selectedCategory: null
     });
   } catch (err) {
     console.log(err);
