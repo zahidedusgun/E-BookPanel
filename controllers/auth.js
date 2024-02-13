@@ -72,6 +72,8 @@ const match = await bcrypt.compare(password, user.password);
     if(match){
       req.session.isAuth = true;
       req.session.username = user.username;
+
+      const url = req.query.returnUrl || "/";
       return res.redirect("/");
     }
 

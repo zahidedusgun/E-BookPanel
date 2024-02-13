@@ -3,6 +3,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const isAuth = require("./middlewares/auth");
 
 const path = require("path");
 const userRoutes = require("./routes/user");
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "Hello world",
+    
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60000 },
@@ -31,6 +33,8 @@ app.use(
     }),
   })
 );
+app.use(locals);
+
 
 app.use("/libs", express.static(path.join(__dirname, "node_modules")));
 app.use("/static", express.static(path.join(__dirname, "public")));
