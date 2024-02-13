@@ -85,6 +85,7 @@ exports.Books = async function (req, res) {
 };
 
 exports.Home = async function (req, res) {
+  console.log(req.cookies);
   try {
     const books = await Book.findAll({ raw: true });
     const categories = await Category.findAll({ raw: true });
@@ -93,6 +94,7 @@ exports.Home = async function (req, res) {
       books: books,
       categories: categories,
       selectedCategory: null,
+      isAuth: req.session.isAuth,
     });
   } catch (err) {
     console.log(err);

@@ -1,7 +1,19 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false })); //submit edilen verilen düzenli gelir.
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "SecretSessionKey",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 60000 },
+
+}));
 
 const path = require("path");
 const userRoutes = require("./routes/user");

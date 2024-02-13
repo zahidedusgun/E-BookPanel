@@ -67,7 +67,14 @@ exports.PostLogin = async function (req, res) {
       });
     }
 
-    // Eğer her iki kontrol de başarılıysa, kullanıcıyı yönlendir.
+const match = await bcrypt.compare(password, user.password);
+
+    if(match){
+      req.session.isAuth = 1;
+      return res.redirect("/");
+    }
+
+    
     return res.redirect("/");
 
   } catch (err) {
@@ -75,3 +82,9 @@ exports.PostLogin = async function (req, res) {
   }
 };
 
+exports.GetLogout = async function (req, res) {
+  await req.session.destroy();
+  return res.render("auth/login", {
+    title: "Login",
+  });
+};

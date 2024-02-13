@@ -9,4 +9,6 @@ router.post("/register",AuthController.PostRegister);
 router.get("/login",AuthController.GetLogin);
 router.post("/login",AuthController.PostLogin);
 
+router.get("/logout",AuthController.GetLogout);
+
 module.exports = router;
