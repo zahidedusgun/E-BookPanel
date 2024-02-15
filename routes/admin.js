@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const imageUpload = require("../helpers/image-upload");
 const isAuth = require("../middlewares/auth");
+const csrf = require("../middlewares/csrf");
 
 const adminController = require("../controllers/admin");
 //Create a book
-router.get("/book/create", isAuth, adminController.GetBookCreate);
+router.get("/book/create", isAuth, csrf, adminController.GetBookCreate);
 
 router.post(
   "/book/create",
@@ -15,18 +16,19 @@ router.post(
 );
 
 //Selecting a book
-router.get("/books/:bookId", isAuth, adminController.GetBookEdit);
+router.get("/books/:bookId", isAuth, csrf, adminController.GetBookEdit);
 
 //Editing the book
 router.post(
   "/books/:bookId",
   isAuth,
+  csrf,
   imageUpload.upload.single("image"),
   adminController.PostBookEdit
 );
 
 //Delete getting
-router.get("/book/delete/:bookId", isAuth, adminController.GetBookDelete);
+router.get("/book/delete/:bookId", isAuth, csrf, adminController.GetBookDelete);
 
 //Delete posting
 router.post("/book/delete/:bookId", isAuth, adminController.PostBookDelete);
@@ -34,19 +36,22 @@ router.post("/book/delete/:bookId", isAuth, adminController.PostBookDelete);
 //get posts
 router.get("/books", isAuth, adminController.GetAllBooks);
 
-//Categories
-
 //get posts
 router.get("/categories", isAuth, adminController.GetAllCategories);
 
 //Create a category
-router.get("/category/create", isAuth, adminController.GetCategoryCreate);
+router.get("/category/create", isAuth, csrf, adminController.GetCategoryCreate);
 
 //Creating a category
 router.post("/category/create", isAuth, adminController.PostCategoryCreate);
 
 // Editing a category
-router.get("/categories/:categoryId", isAuth, adminController.GetCategoryEdit);
+router.get(
+  "/categories/:categoryId",
+  isAuth,
+  csrf,
+  adminController.GetCategoryEdit
+);
 
 //Editing the category
 router.post(
@@ -59,6 +64,7 @@ router.post(
 router.get(
   "/category/delete/:categoryId",
   isAuth,
+  csrf,
   adminController.GetCategoryDelete
 );
 

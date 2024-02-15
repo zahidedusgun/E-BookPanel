@@ -45,10 +45,11 @@ exports.GetCategoryDelete = async (req, res) => {
     res.render("admin/category-delete", {
       title: "Delete Category",
       category: category,
+      
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 };
 
@@ -117,8 +118,9 @@ exports.PostCategoryCreate = async (req, res) => {
   try {
     await Category.create({
       categoryName: categoryName,
+      url: slugField(categoryName),
     });
-    res.redirect("admin/categories?action=created");
+    res.redirect("/admin/categories?action=created");
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Category Create" });

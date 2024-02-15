@@ -19,14 +19,18 @@ exports.PostRegister = async function (req, res) {
 
   const hashedPassword = await bcrypt.hash(password, 8);
 
-  console.log("user çalışıyor");
-  console.log(password);
   try {
+    const user = await User.findOne({ where: { email: email } });
+    if (user) {
+      req.session.message = {text: "User already exists", class: "danger"};
+      return res.redirect("login");
+    }
     await User.create({
       username: username,
       email: email,
       password: hashedPassword,
     });
+    req.session.message = {text: "User created successfully", class: "success"};
     return res.redirect("login");
   } catch (err) {
     console.log(err);
@@ -34,13 +38,19 @@ exports.PostRegister = async function (req, res) {
 };
 
 exports.GetLogin = async function (req, res) {
+  const message = req.session.message;
+  delete req.session.message;
   try {
     return res.render("auth/login", {
       title: "Login",
+      message: message,
+      csrfToken: req.csrfToken(),
     });
+
   } catch (err) {
     console.log(err);
   }
+  console.log("token",csrfToken);
 };
 
 exports.PostLogin = async function (req, res) {
@@ -63,7 +73,7 @@ exports.PostLogin = async function (req, res) {
     if (!isMatch) {
       return res.render("auth/login", {
         title: "Login",
-        message: "Invalid email or password",
+        message: {text: "Invalid Email or Password", class: "danger"},
       });
     }
 

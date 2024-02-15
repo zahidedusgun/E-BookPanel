@@ -3,7 +3,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
-const isAuth = require("./middlewares/auth");
+const csurf = require("csurf");
 
 const path = require("path");
 const userRoutes = require("./routes/user");
@@ -19,21 +19,23 @@ const Category = require("./models/category");
 const Book = require("./models/book");
 const User = require("./models/user");
 
-app.use(express.urlencoded({ extended: false })); //submit edilen verilen düzenli gelir.
+
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(
-  session({
-    secret: "Hello world",
-    
+app.use(session({
+    secret: "hello world",
     resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24
+    },
     store: new SequelizeStore({
-      db: sequelize,
-    }),
-  })
-);
+        db: sequelize
+    })
+}));
+
 app.use(locals);
+app.use(csurf());
 
 
 app.use("/libs", express.static(path.join(__dirname, "node_modules")));

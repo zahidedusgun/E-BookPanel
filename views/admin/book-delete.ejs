@@ -15,7 +15,8 @@
                     <b><%= book.name %> </b> <br> Are you sure to delete this book?
                 </p>
                 <form method="post">
-                    <input type="hidden" name="blogid" value="<%= book.bookId %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="bookId" value="<%= book.bookId %>">
                     <button class="btn btn-danger" type="submit">YES</button>
                     <a href="/admin/books" class="btn btn-primary">RETURN HOME PAGE</a>
                 </form>

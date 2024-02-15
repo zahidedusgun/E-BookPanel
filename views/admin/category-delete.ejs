@@ -15,7 +15,8 @@
                     <b><%= category.categoryName %> </b> <br> Are you sure to delete this category?
                 </p>
                 <form method="post">
-                    <input type="hidden" name="blogid" value="<%= category.category_name %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="categoryId" value="<%= category.categoryId %>">
                     <button class="btn btn-danger" type="submit">YES</button>
                     <a href="/admin/categories" class="btn btn-primary">Return Category Page</a>
                 </form>
