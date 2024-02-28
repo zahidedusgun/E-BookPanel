@@ -74,4 +74,10 @@ router.post(
   isAuth,
   adminController.PostCategoryDelete
 );
+
+router.get("/roles", isAuth, adminController.GetAllRoles);
+// router.get("/roles/:roleid", isAuth, csrf, adminController.GetRoleEdit);
+// router.post("/roles/remove", isAuth, adminController.RoleRemove);
+
+
 module.exports = router;

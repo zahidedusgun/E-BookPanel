@@ -1,6 +1,9 @@
 const Book = require("../models/book");
 const Category = require("../models/category");
+const Role = require("../models/role");
+const User = require("../models/user");
 const fs = require("fs");
+const sequelize = require("sequelize");
 const slugField = require("../helpers/slugfield");
 
 exports.GetBookDelete = async (req, res) => {
@@ -256,3 +259,29 @@ exports.GetAllCategories = async (req, res) => {
     res.status(500).json({ error: "Get Category Internal Server Error" });
   }
 };
+
+exports.GetAllRoles = async function(req, res) {
+  try {
+      const roles = await Role.findAll({
+          attributes: {
+              include: ['role.roleId','role.roleName',[sequelize.fn('COUNT', sequelize.col('users.userId')), 'user_count']]
+          },
+          include: [
+              {model: User, attributes:['id'] }
+          ],
+          group: ['role.roleId'],
+          raw: true,
+          includeIgnoreAttributes: false
+      });
+
+      res.render("admin/role-list", {
+          title: "role list",
+          roles: roles
+      });
+  }
+  catch(err) {
+      console.log(err);
+  }
+}
+
+

@@ -162,12 +162,12 @@ exports.PostReset = async function (req, res) {
     console.log(err);
   }
 };
-
 exports.GetNewPassword = async function (req, res) {
+  const token = req.params.token;
   try {
     const user = await User.findOne({
       where: {
-        resetToken: req.params.token,
+        resetToken: token,
         resetTokenExpiration: { [Op.gt]: Date.now() },
       },
     });
@@ -181,16 +181,16 @@ exports.GetNewPassword = async function (req, res) {
 };
 
 exports.PostNewPassword = async function (req, res) {
-  const token = req.params.token;
+  const token = req.body.token;
   const userId = req.body.userId;
   const password = req.body.password;
   try {
     const user = await User.findOne({
       where: {
-        resetToken: token,
+        resetToken:token,
         resetTokenExpiration: { [Op.gt]: Date.now() },
-        userId: userId,
       },
+      userId: userId,
     });
     user.password = await bcrypt.hash(password, 8);
     user.resetToken = null;

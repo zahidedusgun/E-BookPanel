@@ -1,11 +1,35 @@
 const Category = require("../models/category");
 const Book = require("../models/book");
+const Role = require("../models/role");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 const slugifyField = require('../helpers/slugfield');
 const { name } = require("ejs");
 
 async function populate() {
   const count = await Category.count();
   if (count == 0) {
+    const users = await User.bulkCreate([
+      {username: "Admin", email: "zahide.dusgun@gmail.com", password: await bcrypt.hash("asd123", 10)},
+      {username: "Moderator", email: "zahide.dusgun@gmail.com", password: await bcrypt.hash("asd123", 10)},
+      {username: "Zahide", email: "zahide.dusgun@gmail.com", password: await bcrypt.hash("asd123", 10)},
+      {username: "Student", email: "zahide.dusgun@gmail.com", password: await bcrypt.hash("asd123", 10)},
+      {username: "Berk", email: "zahide.dusgun@gmail.com", password: await bcrypt.hash("asd123", 10)},
+      
+  ]);
+    const roles = await Role.bulkCreate([
+      {roleName: "admin"},
+      {roleName: "moderator"},
+      {roleName: "student"},
+  ]);
+
+  await users[0].addRole(roles[0]);  
+  await users[0].addRole(roles[1]);   
+  await users[1].addRole(roles[1]);  
+  await users[2].addRole(roles[1]);   
+  await users[3].addRole(roles[2]);  
+  await users[4].addRole(roles[2]);   
+
     await Category.bulkCreate([
       { categoryName: "Fiction", url: slugifyField("Fiction"),},
       { categoryName: "Non-Fiction", url: slugifyField("Non-Fiction"),},
